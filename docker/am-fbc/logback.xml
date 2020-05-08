@@ -1,0 +1,21 @@
+<configuration>
+    <!-- This logback config is only needed if you dont want to use the default json logger -->
+    <appender name="JSON" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- <encoder  class="net.logstash.logback.encoder.LogstashEncoder">
+                <includeMdcKeyName>transactionId</includeMdcKeyName>
+        </encoder> -->
+
+        <!--      <pattern>%d{ISO8601} [%X{transactionId}] %-5level %logger{5} - %m%n%ex</pattern> -->
+        <encoder>
+            <pattern>%d{ISO8601} %-5level %logger{5} - %m%n%ex</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.forgerock.openam.core.rest.authn.http.AuthenticationServiceV2" level="WARN">
+        <appender-ref ref="JSON" />
+    </logger>
+
+    <root level="WARN">
+        <appender-ref ref="JSON" />
+    </root>
+</configuration>

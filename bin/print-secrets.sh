@@ -5,7 +5,7 @@ getsec () {
 }
 
 amadmin_password () {
-    echo "$(getsec amster-env-secrets AMADMIN_PASS) (amadmin user)" 
+    echo "$(getsec am-env-secrets AM_PASSWORDS_AMADMIN_CLEAR) (amadmin user)"
 }
 
 profile_passwords () {
@@ -13,7 +13,7 @@ profile_passwords () {
 }
 
 openidm_admin_password () {
-    echo "$(getsec idm-env-secrets OPENIDM_ADMIN_PASSWORD) (openidm-admin user)" 
+    echo "$(getsec idm-env-secrets OPENIDM_ADMIN_PASSWORD) (openidm-admin user)"
 }
 
 6.5_directory_manager_password () {
@@ -42,12 +42,12 @@ backup_restore_info () {
     echo ""
 }
 
-case $1 in 
+case $1 in
 
     "6.5")
-        echo ""  
+        echo ""
         echo "Administrator passwords:"
-        echo ""  
+        echo ""
         amadmin_password
         openidm_admin_password
         6.5_directory_manager_password
@@ -59,9 +59,9 @@ case $1 in
     ;;
 
     "7.0")
-        echo ""  
+        echo ""
         echo "Administrator passwords:"
-        echo ""  
+        echo ""
         amadmin_password
         7.0_directory_manager_password
         echo ""
