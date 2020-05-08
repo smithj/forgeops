@@ -64,12 +64,10 @@ spec:
         volumeMounts:
         - mountPath: /opt/opendj/data
           name: data
-          
-#        - mountPath: /opt/opendj/bak
-#          name: backup
-
         - mountPath: /var/run/secrets/opendj-passwords
           name: passwords
+        - mountPath: /opt/opendj/secrets
+          name: secrets
       containers:
       - name: ds
         image: ds
@@ -80,15 +78,6 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-              
-#        - name: FQDN_DS0
-#          value: localhost
-#        - name: BACKUP_DIRECTORY
-#          value: /opt/opendj/bak
-
-        # Best to let DS calculate this rather than hard code here.
-        # - name: DS_BOOTSTRAP_REPLICATION_SERVERS
-        #   value: ds-0.ds.default.svc.cluster.local:8989
         # See https://bugster.forgerock.org/jira/browse/CLOUD-1877
         # Live / Ready probes complicate DS operations. Pod restart rarely solves DB issues.
         # livenessProbe:
@@ -119,25 +108,19 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /opt/opendj/data
-          
-#        - name: backup
-#          mountPath: /opt/opendj/bak
-
         - name: secrets
           mountPath: /opt/opendj/secrets
-        - mountPath: /var/run/secrets/opendj
-          name: secrets
       securityContext:
         fsGroup: 0
         runAsUser: 11111
       terminationGracePeriodSeconds: 30
       volumes:
-      - name: secrets
+      - name: secrets  # keystore and pin
         secret:
           secretName: ds
       - name: passwords
         secret:
-          secretName: ds-passwords
+          secretName: ds-passwords # passwords - including the service account passwords
   updateStrategy:
     type: RollingUpdate
   volumeClaimTemplates:
@@ -152,13 +135,3 @@ spec:
       resources:
         requests:
           storage: 10Gi
-
-#  - metadata:
-#      name: backup
-#      annotations:
-#        pv.beta.kubernetes.io/gid: "0"
-#    spec:
-#      accessModes: [ "ReadWriteOnce" ]
-#      resources:
-#        requests:
-#          storage: 10Gi

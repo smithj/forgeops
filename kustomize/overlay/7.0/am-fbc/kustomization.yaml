@@ -1,16 +1,9 @@
 # Deploys to prod.iam.forgeops.com. Uses the Let's encrypt issuer for SSL.
-namespace: fbc
+# namespace: fbc
+namespace: fbctest
 resources:
   - ../../../base/kustomizeConfig
-  - ../../../base/forgeops-secrets
-  - ../../../base/7.0/ds/cts
-  - ../../../base/7.0/ds/idrepo
-  - ../../../base/ldif-importer
   - ../../../base/am
-  - ../../../base/idm
-  - ../../../base/end-user-ui
-  - ../../../base/login-ui
-  - ../../../base/admin-ui
   - ../../../base/7.0/ingress
 
 configMapGenerator:
@@ -33,12 +26,14 @@ configMapGenerator:
   - ENDUSER_CLIENT_ID=endUserUIClient
   - ADMIN_CLIENT_ID=idmAdminClient
   - THEME=default
-  # Additional FBC. TODO: Can we auto-calculate these
+  # Additional FBC. TODO; Rationalize these
   - AM_SERVER_FQDN=$(NAMESPACE).iam.forgeops.com
   - AM_STORES_USER_SERVERS=ds-idrepo-0.ds-idrepo
-  - AM_STORES_CTS_SERVERS=ds-cts-0.ds-cts
-  - AM_STORES_POLICY_SERVERS=ds-idrepo-0.ds-idrepo
+  # - AM_STORES_CTS_SERVERS=ds-cts-0.ds-cts
+  - AM_STORES_CTS_SERVERS=ds-idrepo-0.ds-idrepo
   - AM_STORES_APPLICATION_SERVERS=ds-idrepo-0.ds-idrepo
+  - AM_STORES_POLICY_SERVERS=ds-idrepo-0.ds-idrepo
+
 
 #  - AM_CONFIG_MODE=PROVIDED
 #  - FBC_ENABLED=true

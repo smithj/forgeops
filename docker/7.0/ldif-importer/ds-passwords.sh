@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -eo pipefail
+
 chgPass () {
     local HOST=$1
     local ADMIN_PASS=$2
@@ -26,10 +28,14 @@ chgPass () {
     esac
 }
 
-chgPass ds-idrepo-0.ds-idrepo ${CFGDIR_PASS} ou=admins,ou=famrecords,ou=openam-session,ou=tokens "uid=openam_cts" ${CTSUSR_PASS}
-chgPass ds-idrepo-0.ds-idrepo ${CFGDIR_PASS} ou=admins,ou=identities "uid=am-identity-bind-account" ${USRUSR_PASS}
-chgPass ds-idrepo-0.ds-idrepo ${CFGDIR_PASS} ou=admins,ou=am-config "uid=am-config" ${CFGUSR_PASS}
+ADMIN_PASS=$(cat /var/run/secrets/opendj-passwords/dirmanager.pw)
 
-chgPass ds-cts-0.ds-cts ${CFGDIR_PASS} ou=admins,ou=famrecords,ou=openam-session,ou=tokens "uid=openam_cts" ${CTSUSR_PASS}
-chgPass ds-cts-0.ds-cts ${CFGDIR_PASS} ou=admins,ou=identities "uid=am-identity-bind-account" ${USRUSR_PASS}
-chgPass ds-cts-0.ds-cts ${CFGDIR_PASS} ou=admins,ou=am-config "uid=am-config" ${CFGUSR_PASS}
+chgPass ds-idrepo-0.ds-idrepo ${ADMIN_PASS} ou=admins,ou=famrecords,ou=openam-session,ou=tokens "uid=openam_cts" ${AM_STORES_CTS_PASSWORD}
+chgPass ds-idrepo-0.ds-idrepo ${ADMIN_PASS} ou=admins,ou=identities "uid=am-identity-bind-account" ${AM_STORES_USER_PASSWORD}
+chgPass ds-idrepo-0.ds-idrepo ${ADMIN_PASS} ou=admins,ou=am-config "uid=am-config" ${AM_STORES_APPLICATION_PASSWORD}
+
+chgPass ds-cts-0.ds-cts ${ADMIN_PASS} ou=admins,ou=famrecords,ou=openam-session,ou=tokens "uid=openam_cts" ${AM_STORES_CTS_PASSWORD}
+# These are not required as the CTS is only used for tokens. Uncomment these if you ever wish to use the CTS store
+# for user or config entries
+#chgPass ds-cts-0.ds-cts ${ADMIN_PASS} ou=admins,ou=identities "uid=am-identity-bind-account" ${{AM_STORES_USER_PASSWORD}
+#chgPass ds-cts-0.ds-cts ${ADMIN_PASS} ou=admins,ou=am-config "uid=am-config" ${AM_STORES_APPLICATION_PASSWORD}

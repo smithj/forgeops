@@ -14,7 +14,7 @@ spec:
         image: ldif-importer
         envFrom:
         - secretRef:
-            name: amster-env-secrets
+            name: ds-env-secrets
         volumeMounts:
         - mountPath: /var/run/secrets/opendj-passwords
           name: passwords
