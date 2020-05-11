@@ -28,17 +28,10 @@ configMapGenerator:
   - THEME=default
   # Additional FBC. TODO; Rationalize these
   - AM_SERVER_FQDN=$(NAMESPACE).iam.forgeops.com
-<<<<<<< HEAD
-  - AM_STORES_USER_SERVERS=ds-idrepo-0.ds-idrepo
-  - AM_STORES_CTS_SERVERS=ds-cts-0.ds-cts
-  - AM_STORES_APPLICATION_SERVERS=ds-idrepo-0.ds-idrepo
-  - AM_STORES_POLICY_SERVERS=ds-idrepo-0.ds-idrepo
-=======
   - AM_STORES_USER_SERVERS=ds-idrepo-0.ds-idrepo:1389
   - AM_STORES_CTS_SERVERS=ds-cts-0.ds-cts:1389
   - AM_STORES_POLICY_SERVERS=ds-idrepo-0.ds-idrepo:1389
   - AM_STORES_APPLICATION_SERVERS=ds-idrepo-0.ds-idrepo:1389
->>>>>>> 1d5af87f... feat: AM fbc
 
 # The variables defined below can be referenced in resources using the syntax $(VARIABLE)
 vars:
