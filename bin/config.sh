@@ -148,6 +148,9 @@ clean_config()
     if [ "$1" == "amster" ]; then
         rm -rf "$DOCKER_ROOT/$1/config"
 
+	elif [ "$1" == "am" ]; then
+		rm -rf "$DOCKER_ROOT/$1/config"
+
     elif [ "$1" == "idm" ]; then
         rm -rf "$DOCKER_ROOT/$1/conf"
 	rm -rf "$DOCKER_ROOT/$1/script"
@@ -196,6 +199,7 @@ export_config(){
 			kubectl cp "$pod":/var/tmp/amster "$DOCKER_ROOT/amster/config"
 			;;
 		am)
+			# TODO
 			echo "AM file based configuration not supported yet"
 			;;
 		*)
@@ -225,6 +229,12 @@ save_config()
 			mkdir -p "$PROFILE_ROOT/amster/config"
 			cp -R "$DOCKER_ROOT/amster/config"  "$PROFILE_ROOT/amster"
 			;;
+		am)
+			# Clean any existing files
+			rm -fr "$PROFILE_ROOT/am/config"
+			mkdir -p "$PROFILE_ROOT/am/config"
+			cp -R "$DOCKER_ROOT/am/config"  "$PROFILE_ROOT/am"
+			;;
 		*)
 			echo "Save not supported for $p"
 		esac
@@ -234,12 +244,14 @@ save_config()
 # chdir to the script root/..
 cd "$script_dir/.."
 PROFILE_ROOT="config/$_arg_version/$_arg_profile"
-DOCKER_ROOT="docker/$_arg_version"
+DOCKER_ROOT="docker/"
 
 if [ "$_arg_component" == "all" ]; then
-	COMPONENTS=(idm ig amster)
+	COMPONENTS=(idm ig amster am)
+elif [ "$_arg_component" == "am" ]; then
+	COMPONENTS=(amster am)
 else
-COMPONENTS=( "$_arg_component" )
+	COMPONENTS=( "$_arg_component" )
 fi
 
 case "$_arg_operation" in

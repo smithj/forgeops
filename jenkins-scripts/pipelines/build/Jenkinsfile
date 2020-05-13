@@ -70,11 +70,13 @@ timestamps {
         pipeline.build()
     }
 
-    if ('master' in [env.CHANGE_TARGET, env.BRANCH_NAME]) {
+    if ('fbc' in [env.CHANGE_TARGET, env.BRANCH_NAME]) {
         pipeline.postBuildTests(pipelineRun)
 
-        if (isPR()) {
-            prAutomation.mergeIfAutomatedProductVersionUpdate(pipelineRun, commonModule.FORGEOPS_GIT_COMMIT)
-        }
+        // Uncomment when fbc branch merges into master
+        
+        // if (isPR()) {
+        //     prAutomation.mergeIfAutomatedProductVersionUpdate(pipelineRun, commonModule.FORGEOPS_GIT_COMMIT)
+        // }
     }
 }
