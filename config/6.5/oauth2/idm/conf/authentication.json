@@ -62,7 +62,7 @@
                 "name" : "STATIC_USER",
                 "properties" : {
                     "queryOnResource" : "endpoint/static/user",
-                    "username" : "rsFilterClient",
+                    "username" : "idm-resource-server",
                     "password" : "&{rs.client.secret|password}",
                     "defaultUserRoles" : [
                         "internal/role/openidm-admin"
@@ -86,7 +86,7 @@
                 "name" : "STATIC_USER",
                 "properties" : {
                     "queryOnResource" : "endpoint/static/user",
-                    "username" : "rsFilterClient",
+                    "username" : "idm-resource-server",
                     "password" : "&{openidm.idpconfig.clientsecret}",
                     "defaultUserRoles" : [
                         "internal/role/openidm-admin"

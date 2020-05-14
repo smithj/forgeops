@@ -3,11 +3,11 @@
     "realm" : "/",
     "amsterVersion" : "&{version}",
     "entityType" : "OAuth2Clients",
-    "entityId" : "rsFilterClient",
+    "entityId" : "idm-resource-server",
     "pathParams" : { }
   },
   "data" : {
-    "_id" : "rsFilterClient",
+    "_id" : "idm-resource-server",
     "signEncOAuth2ClientConfig" : {
       "idTokenEncryptionMethod" : "A128CBC-HS256",
       "jwkSet" : null,

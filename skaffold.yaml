@@ -223,25 +223,25 @@ profiles:
   build:
     artifacts:
     - image: am
-      context: docker/am
+      context: docker/7.0/am
       kaniko: *kaniko-opts
     - image: amster
-      context: docker/amster
+      context: docker/7.0/amster
       kaniko: *kaniko-opts
     - image: idm
-      context: docker/idm
+      context: docker/7.0/idm
       kaniko: *kaniko-opts
     - image: ds-cts
-      context: docker/ds/cts
+      context: docker/7.0/ds/cts
       kaniko: *kaniko-opts
     - image: ds-idrepo
-      context: docker/ds/idrepo
+      context: docker/7.0/ds/idrepo
       kaniko: *kaniko-opts
     - image: forgeops-secrets
-      context: docker/forgeops-secrets
+      context: docker/7.0/forgeops-secrets
       kaniko: *kaniko-opts
     - image: ldif-importer
-      context: docker/ldif-importer
+      context: docker/7.0/ldif-importer
       kaniko: *kaniko-opts
     cluster: *kaniko-cluster
     tagPolicy:
@@ -256,16 +256,16 @@ profiles:
   build:
     artifacts:
     - image: ds-idrepo
-      context: docker/ds/idrepo
+      context: docker/7.0/ds/idrepo
       kaniko: *kaniko-opts
     - image: ds-cts
-      context: docker/ds/cts
+      context: docker/7.0/ds/cts
       kaniko: *kaniko-opts
     - image: forgeops-secrets
-      context: docker/forgeops-secrets
+      context: docker/7.0/forgeops-secrets
       kaniko: *kaniko-opts
     - image: ldif-importer
-      context: docker/ldif-importer
+      context: docker/7.0/ldif-importer
       kaniko: *kaniko-opts
     cluster: *kaniko-cluster
     tagPolicy:
@@ -278,9 +278,11 @@ profiles:
   build:
     artifacts:
     - image: am
-      context: docker/am
+      context: docker/7.0/am
     - image: amster
-      context: docker/amster
+      context: docker/7.0/amster
+    - image: idm
+      context: docker/7.0/idm
   deploy:
     kustomize:
       path: ./kustomize/overlay/7.0/am-fbc
