@@ -97,7 +97,7 @@ export AM_SELFSERVICE_LEGACY_CONFIRMATION_EMAIL_LINK_SIGNING_KEY="${AM_SELFSERVI
 echo "****** Environment *************: "
 env | sort
 
-sleep 40
+# sleep 40
 
 
 echo "Starting tomcat with opts: ${CATALINA_OPTS}"

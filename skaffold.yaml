@@ -49,12 +49,12 @@ profiles:
     - image: am
       context: docker/7.0/am
       kaniko: &kaniko-opts
-        #cache: {}
+        cache: {}
         image: gcr.io/kaniko-project/executor:v0.20.0
         # The flags is deprecated - but without it we are seeing Kaniko bugs.
         # CLOUD-1955
-        flags:
-          - '--single-snapshot'
+        # flags:
+        #   - '--single-snapshot'
 # This is the recommended way of passing the single-snapshot arg - but we see issues.
 #        buildArgs:
 #          single-snapshot: "true"
@@ -252,7 +252,7 @@ profiles:
 
 
 # FBC ds and secrets.
-- name: fbc-ds
+- name: am-ds
   build:
     artifacts:
     - image: ds-idrepo
@@ -262,7 +262,7 @@ profiles:
       context: docker/7.0/ds/cts
       kaniko: *kaniko-opts
     - image: forgeops-secrets
-      context: docker/7.0/forgeops-secrets
+      context: docker/forgeops-secrets
       kaniko: *kaniko-opts
     - image: ldif-importer
       context: docker/7.0/ldif-importer

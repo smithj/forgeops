@@ -153,9 +153,8 @@ clean_config()
 
     elif [ "$1" == "idm" ]; then
         rm -rf "$DOCKER_ROOT/$1/conf"
-	rm -rf "$DOCKER_ROOT/$1/script"
-	rm -rf "$DOCKER_ROOT/$1/ui"
-
+		rm -rf "$DOCKER_ROOT/$1/script"
+		rm -rf "$DOCKER_ROOT/$1/ui"
     elif [ "$1" == "ig" ]; then
         rm -rf "$DOCKER_ROOT/$1/config"
         rm -rf "$DOCKER_ROOT/$1/scripts"
@@ -244,7 +243,8 @@ save_config()
 # chdir to the script root/..
 cd "$script_dir/.."
 PROFILE_ROOT="config/$_arg_version/$_arg_profile"
-DOCKER_ROOT="docker/"
+DOCKER_ROOT="docker/$_arg_version"
+
 
 if [ "$_arg_component" == "all" ]; then
 	COMPONENTS=(idm ig amster am)
