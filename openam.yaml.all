@@ -1,0 +1,1732 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app: forgeops-secrets
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+  name: forgeops-secrets-serviceaccount
+  namespace: forgeops-test
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app: forgeops-secrets
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+  name: forgeops-secrets-role
+  namespace: forgeops-test
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - serviceaccounts
+  verbs:
+  - get
+  - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app: forgeops-secrets
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+  name: forgeops-secrets-rolebinding
+  namespace: forgeops-test
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: forgeops-secrets-role
+subjects:
+- kind: ServiceAccount
+  name: forgeops-secrets-serviceaccount
+  namespace: forgeops-test
+---
+apiVersion: v1
+data:
+  CTS_STORES: ds-cts-0.ds-cts:1389
+  IDREPO_STORES: ds-idrepo-0.ds-idrepo:1389
+  PROMETHEUS_PASSWORD: prometheus
+kind: ConfigMap
+metadata:
+  labels:
+    app: amster
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+    vendor: forgerock
+  name: amster
+  namespace: forgeops-test
+---
+apiVersion: v1
+data:
+  IDM_ENVCONFIG_DIRS: /opt/openidm/resolver
+  LOGGING_PROPERTIES: /var/run/openidm/logging/logging.properties
+  OPENIDM_ANONYMOUS_PASSWORD: anonymous
+  OPENIDM_CLUSTER_REMOVE_OFFLINE_NODE_STATE: "true"
+  OPENIDM_CONFIG_REPO_ENABLED: "false"
+  PROJECT_HOME: /opt/openidm
+kind: ConfigMap
+metadata:
+  labels:
+    app: idm
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    component: idm
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+    tier: middle
+    vendor: forgerock
+  name: idm
+  namespace: forgeops-test
+---
+apiVersion: v1
+data:
+  logging.properties: |
+    # Properties file that configures the operation of the JDK
+    # logging facility.
+    # The system will look for this configuration file, first using
+    # a System property specified at startup:
+    #
+    # >java -Djava.util.logging.config.file=myLoggingConfigFilePath
+    #
+    # If this property is not specified, then the configuration file is
+    # retrieved from its default location at:
+    #
+    # JDK_HOME/jre/lib/logging.properties
+    ############################################################
+    #      Global properties
+    ############################################################
+    # ------------------------------------------
+    # The set of handlers to be loaded upon startup.
+    # Comma-separated list of class names.
+    # (? LogManager docs say no comma here, but JDK example has comma.)
+    # StreamHandler: A simple handler for writing formatted records to an OutputStream.
+    # ConsoleHandler: A simple handler for writing formatted records to System.err
+    # FileHandler: A handler that writes formatted log records either to a single file, or to a set of rotating log files.
+    # SocketHandler: A handler that writes formatted log records to remote TCP ports.
+    # MemoryHandler: A handler that buffers log records in memory.
+    # handlers=java.util.logging.ConsoleHandler
+    # handlers=java.util.logging.FileHandler, java.util.logging.ConsoleHandler
+    # For Docker, write everything to the console
+    handlers=java.util.logging.ConsoleHandler
+    # Default global logging level.
+    # This specifies which kinds of events are logged across
+    # all loggers.  For any given facility this global level
+    # can be overriden by a facility specific level
+    # Note that the ConsoleHandler also has a separate level
+    # setting to limit messages printed to the console.
+    # Loggers and Handlers may override this level
+    .level=INFO
+    # Loggers
+    # ------------------------------------------
+    # Loggers are usually attached to packages.
+    # Here, the level for each package is specified.
+    # The global level is used by default, so levels
+    # specified here simply act as an override.
+    # The levels in descending order are:
+    #   SEVERE (highest value)
+    #   WARNING
+    #   INFO
+    #   CONFIG
+    #   FINE
+    #   FINER
+    #   FINEST (lowest value)
+    ############################################################
+    # Facility specific properties.
+    # Provides extra control for each logger.
+    ############################################################
+    #org.forgerock.openidm.provisioner.level = FINER
+    #org.forgerock.openidm.repo.level = FINER
+    #org.forgerock.openidm.recon.level = FINER
+    # OpenICF is noisy at INFO level
+    org.forgerock.openicf.level=WARNING
+    # Logs the output from OSGi logging
+    org.forgerock.openidm.Framework.level=WARNING
+    # On restart the BarURLHandler can create warning noise
+    org.activiti.osgi.BarURLHandler.level=SEVERE
+    # Suppress warnings of failed connector loading
+    org.identityconnectors.framework.impl.api.local.LocalConnectorInfoManagerImpl.level=SEVERE
+    ############################################################
+    # Handler specific properties.
+    # Describes specific configuration info for Handlers.
+    ############################################################
+    # --- ConsoleHandler ---
+    # Default: java.util.logging.ConsoleHandler.level = INFO
+    # Override of global logging level
+    #java.util.logging.ConsoleHandler.level = WARNING
+    # For Docker
+    java.util.logging.ConsoleHandler.level = INFO
+    java.util.logging.ConsoleHandler.formatter = java.util.logging.SimpleFormatter
+    # specifies the name of the filter class to be associated with this handler,
+    # defaults to {@code null} if this property is not found or has an invalid value.
+    java.util.logging.ConsoleHandler.filter=org.forgerock.openidm.logging.util.LogFilter
+    # --- FileHandler ---
+    # Override of global logging level
+    java.util.logging.FileHandler.level = ALL
+    # Naming style for the output file:
+    # (The output file is placed in the directory
+    # defined by the "user.home" System property.)
+    # java.util.logging.FileHandler.pattern = %h/java%u.log
+    java.util.logging.FileHandler.pattern = logs/openidm%u.log
+    # Limiting size of output file in bytes:
+    java.util.logging.FileHandler.limit = 5242880
+    # Number of output files to cycle through, by appending an
+    # integer to the base file name:
+    java.util.logging.FileHandler.count = 5
+    # Style of output (Simple or XML):
+    # Writes brief "human-readable" summaries of log records.
+    java.util.logging.FileHandler.formatter = java.util.logging.SimpleFormatter
+    # Writes detailed XML-structured information.
+    # java.util.logging.FileHandler.formatter = java.util.logging.XMLFormatter
+    # specifies the character set encoding name.
+    # defaults to the default platform encoding
+    java.util.logging.FileHandler.encoding = UTF-8
+kind: ConfigMap
+metadata:
+  labels:
+    app: idm
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    component: idm
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+    tier: middle
+    vendor: forgerock
+  name: idm-logging-properties
+  namespace: forgeops-test
+---
+apiVersion: v1
+data:
+  ADMIN_CLIENT_ID: idmAdminClient
+  AM_URL: https://forgeops-test.iam.example.com/am
+  DOMAIN: example.com
+  ENDUSER_CLIENT_ID: endUserUIClient
+  ENDUSER_UI_URL: https://forgeops-test.iam.example.com/enduser
+  FQDN: forgeops-test.iam.example.com
+  IDM_ADMIN_URL: https://forgeops-test.iam.example.com/admin
+  IDM_EXPORT_URL: https://forgeops-test.iam.example.com/export
+  IDM_REST_URL: https://forgeops-test.iam.example.com/openidm
+  IDM_UPLOAD_URL: https://forgeops-test.iam.example.com/upload
+  LOGIN_UI_URL: https://forgeops-test.iam.example.com/login/#/service/Login
+  PLATFORM_ADMIN_URL: https://forgeops-test.iam.example.com/platform
+  SUBDOMAIN: iam
+  THEME: default
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+  name: platform-config-f7d47dc24k
+  namespace: forgeops-test
+---
+apiVersion: v1
+data:
+  index.html: |
+    <html>
+      <img src="https://forum.forgerock.com/app/uploads/2014/09/fr-buddy-logo.png">
+      <h2>ForgeOps Deployment</h2>
+      <h3>Deployment Information</h3>
+      <table>
+        <tr><td>NAMESPACE:</td> <td>forgeops-test</td></tr>
+        <tr><td>DOMAIN:</td> <td>example.com</td></tr>
+        <tr><td>SUBDOMAIN:</td> <td>iam</td></tr>
+      </table>
+
+      <h3>Links</h3>
+      <ul>
+        <li>
+          <a  href="/am/XUI/#login" target="_blank">AM Console</a>
+        </li>
+        <li>
+          <a href="/admin" target="_blank">IDM Admin UI</a>
+        </li>
+        <li>
+          <a href="/enduser/#/dashboard" target="_blank">End User UI</a>
+        </li>
+        <li>
+          <a href="/tests/latest.html" target="_blank">Smoke Test Report</a>
+        </li>
+      </ul>
+    </html>
+kind: ConfigMap
+metadata:
+  labels:
+    app: web
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    component: web
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+    tier: ui
+    vendor: forgerock
+  name: web
+  namespace: forgeops-test
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: admin-ui
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+    tier: ui
+    vendor: forgerock
+  name: admin-ui
+  namespace: forgeops-test
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: admin-ui
+    app.kubernetes.io/name: forgerock-01
+    tier: ui
+    vendor: forgerock
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: am
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    component: am
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+    tier: middle
+    vendor: forgerock
+  name: am
+  namespace: forgeops-test
+spec:
+  ports:
+  - name: am
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: am
+    app.kubernetes.io/name: forgerock-01
+    component: am
+    tier: middle
+    vendor: forgerock
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    affinity: directory
+    app: ds-cts
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    component: ds
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+  name: ds-cts
+  namespace: forgeops-test
+spec:
+  clusterIP: None
+  ports:
+  - name: admin
+    port: 4444
+  - name: ldap
+    port: 1389
+  - name: ldaps
+    port: 1636
+  - name: http
+    port: 8080
+  - name: https
+    port: 8443
+  selector:
+    affinity: directory
+    app: ds-cts
+    app.kubernetes.io/name: forgerock-01
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    affinity: directory
+    app: ds-idrepo
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    component: ds
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+  name: ds-idrepo
+  namespace: forgeops-test
+spec:
+  clusterIP: None
+  ports:
+  - name: admin
+    port: 4444
+  - name: ldap
+    port: 1389
+  - name: ldaps
+    port: 1636
+  - name: http
+    port: 8080
+  - name: https
+    port: 8443
+  selector:
+    affinity: directory
+    app: ds-idrepo
+    app.kubernetes.io/name: forgerock-01
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: end-user-ui
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+    tier: ui
+    vendor: forgerock
+  name: end-user-ui
+  namespace: forgeops-test
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: end-user-ui
+    app.kubernetes.io/name: forgerock-01
+    tier: ui
+    vendor: forgerock
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: idm
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    component: idm
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+    tier: middle
+    vendor: forgerock
+  name: idm
+  namespace: forgeops-test
+spec:
+  ports:
+  - name: idm
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: idm
+    app.kubernetes.io/name: forgerock-01
+    component: idm
+    tier: middle
+    vendor: forgerock
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: login-ui
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+    tier: ui
+    vendor: forgerock
+  name: login-ui
+  namespace: forgeops-test
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: login-ui
+    app.kubernetes.io/name: forgerock-01
+    tier: ui
+    vendor: forgerock
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: web
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    component: web
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+    tier: ui
+    vendor: forgerock
+  name: web
+  namespace: forgeops-test
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: web
+    app.kubernetes.io/name: forgerock-01
+    component: web
+    tier: ui
+    vendor: forgerock
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: admin-ui
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+    tier: ui
+    vendor: forgerock
+  name: admin-ui
+  namespace: forgeops-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: admin-ui
+      app.kubernetes.io/name: forgerock-01
+      tier: ui
+      vendor: forgerock
+  template:
+    metadata:
+      labels:
+        app: admin-ui
+        app.kubernetes.io/managed-by: skaffold-v1.9.1
+        app.kubernetes.io/name: forgerock-01
+        skaffold.dev/builder: local
+        skaffold.dev/cleanup: "true"
+        skaffold.dev/deployer: kustomize
+        skaffold.dev/docker-api-version: "1.35"
+        skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+        skaffold.dev/tag-policy: sha256
+        skaffold.dev/tail: "true"
+        tier: ui
+        vendor: forgerock
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: platform-config-f7d47dc24k
+        image: gcr.io/forgerock-io/platform-admin-ui/docker-build:7.0.0-de196c2de01eaa8e8c24ab12fadf483299b48cb9
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+        name: admin-ui
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+        resources:
+          limits:
+            memory: 100Mi
+          requests:
+            cpu: 10m
+            memory: 100Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: am
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    component: am
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+    tier: middle
+    vendor: forgerock
+  name: am
+  namespace: forgeops-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: am
+      app.kubernetes.io/name: forgerock-01
+      component: am
+      tier: middle
+      vendor: forgerock
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+      labels:
+        app: am
+        app.kubernetes.io/managed-by: skaffold-v1.9.1
+        app.kubernetes.io/name: forgerock-01
+        component: am
+        skaffold.dev/builder: local
+        skaffold.dev/cleanup: "true"
+        skaffold.dev/deployer: kustomize
+        skaffold.dev/docker-api-version: "1.35"
+        skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+        skaffold.dev/tag-policy: sha256
+        skaffold.dev/tail: "true"
+        tier: middle
+        vendor: forgerock
+    spec:
+      containers:
+      - env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        envFrom:
+        - secretRef:
+            name: am-env-secrets
+        - configMapRef:
+            name: platform-config-f7d47dc24k
+        - secretRef:
+            name: amster-env-secrets
+        image: docker.james.lab.zivra.com:9500/am:latest@sha256:066c91efd64bb900b1360dfac12055eb3f8eb5afa8f66ad9a9443340efe38e86
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /am/isAlive.jsp
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+        name: openam
+        ports:
+        - containerPort: 8080
+          name: http
+        readinessProbe:
+          httpGet:
+            path: /am/isAlive.jsp
+            port: 8080
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          timeoutSeconds: 5
+        resources:
+          limits:
+            memory: 1000Mi
+          requests:
+            cpu: 250m
+            memory: 1000Mi
+        volumeMounts:
+        - mountPath: /var/run/secrets/am/boot
+          name: am-boot-secrets
+        - mountPath: /var/run/secrets/truststore
+          name: truststore
+        - mountPath: /var/run/secrets/am/password
+          name: am-runtime-passwords
+        - mountPath: /var/run/secrets/am/keystore
+          name: am-runtime-keystore
+        - mountPath: /var/run/secrets/amster
+          name: amster-keys
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - name: am-boot-secrets
+        secret:
+          secretName: am-boot-secrets
+      - name: am-runtime-keystore
+        secret:
+          secretName: am-runtime-keystore
+      - name: am-runtime-passwords
+        secret:
+          secretName: am-runtime-passwords
+      - name: amster-keys
+        secret:
+          secretName: amster
+      - name: truststore
+        secret:
+          secretName: truststore
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: amster
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+    vendor: forgerock
+  name: amster
+  namespace: forgeops-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: amster
+      app.kubernetes.io/name: forgerock-01
+      vendor: forgerock
+  template:
+    metadata:
+      labels:
+        app: amster
+        app.kubernetes.io/managed-by: skaffold-v1.9.1
+        app.kubernetes.io/name: forgerock-01
+        skaffold.dev/builder: local
+        skaffold.dev/cleanup: "true"
+        skaffold.dev/deployer: kustomize
+        skaffold.dev/docker-api-version: "1.35"
+        skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+        skaffold.dev/tag-policy: sha256
+        skaffold.dev/tail: "true"
+        vendor: forgerock
+    spec:
+      containers:
+      - args:
+        - configure
+        - sync
+        env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        envFrom:
+        - configMapRef:
+            name: amster
+        - configMapRef:
+            name: platform-config-f7d47dc24k
+        - secretRef:
+            name: amster-env-secrets
+        image: docker.james.lab.zivra.com:9500/amster:latest@sha256:9351394ceb43dec91945ef96a2be0b19b152f16db694aeb1a2c25b6aed3025a9
+        imagePullPolicy: IfNotPresent
+        name: amster
+        resources:
+          limits:
+            memory: 512Mi
+          requests:
+            cpu: 100m
+            memory: 512Mi
+        volumeMounts:
+        - mountPath: /var/run/secrets/amster
+          name: amster-secrets
+          readOnly: true
+      terminationGracePeriodSeconds: 5
+      volumes:
+      - name: amster-secrets
+        secret:
+          secretName: amster
+      - configMap:
+          name: platform-config-f7d47dc24k
+        name: platform-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: end-user-ui
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+    tier: ui
+    vendor: forgerock
+  name: end-user-ui
+  namespace: forgeops-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: end-user-ui
+      app.kubernetes.io/name: forgerock-01
+      tier: ui
+      vendor: forgerock
+  template:
+    metadata:
+      labels:
+        app: end-user-ui
+        app.kubernetes.io/managed-by: skaffold-v1.9.1
+        app.kubernetes.io/name: forgerock-01
+        skaffold.dev/builder: local
+        skaffold.dev/cleanup: "true"
+        skaffold.dev/deployer: kustomize
+        skaffold.dev/docker-api-version: "1.35"
+        skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+        skaffold.dev/tag-policy: sha256
+        skaffold.dev/tail: "true"
+        tier: ui
+        vendor: forgerock
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: platform-config-f7d47dc24k
+        image: gcr.io/forgerock-io/platform-enduser-ui/docker-build:7.0.0-de196c2de01eaa8e8c24ab12fadf483299b48cb9
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+        name: end-user-ui
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+        resources:
+          limits:
+            memory: 100Mi
+          requests:
+            cpu: 10m
+            memory: 100Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: login-ui
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+    tier: ui
+    vendor: forgerock
+  name: login-ui
+  namespace: forgeops-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: login-ui
+      app.kubernetes.io/name: forgerock-01
+      tier: ui
+      vendor: forgerock
+  template:
+    metadata:
+      labels:
+        app: login-ui
+        app.kubernetes.io/managed-by: skaffold-v1.9.1
+        app.kubernetes.io/name: forgerock-01
+        skaffold.dev/builder: local
+        skaffold.dev/cleanup: "true"
+        skaffold.dev/deployer: kustomize
+        skaffold.dev/docker-api-version: "1.35"
+        skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+        skaffold.dev/tag-policy: sha256
+        skaffold.dev/tail: "true"
+        tier: ui
+        vendor: forgerock
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: platform-config-f7d47dc24k
+        image: gcr.io/forgerock-io/platform-login-ui/docker-build:7.0.0-de196c2de01eaa8e8c24ab12fadf483299b48cb9
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+        name: login-ui
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+        resources:
+          limits:
+            memory: 100Mi
+          requests:
+            cpu: 10m
+            memory: 100Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: web
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    component: web
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+    tier: ui
+    vendor: forgerock
+  name: web
+  namespace: forgeops-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+      app.kubernetes.io/name: forgerock-01
+      component: web
+      tier: ui
+      vendor: forgerock
+  template:
+    metadata:
+      labels:
+        app: web
+        app.kubernetes.io/managed-by: skaffold-v1.9.1
+        app.kubernetes.io/name: forgerock-01
+        component: web
+        skaffold.dev/builder: local
+        skaffold.dev/cleanup: "true"
+        skaffold.dev/deployer: kustomize
+        skaffold.dev/docker-api-version: "1.35"
+        skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+        skaffold.dev/tag-policy: sha256
+        skaffold.dev/tail: "true"
+        tier: ui
+        vendor: forgerock
+    spec:
+      containers:
+      - image: nginxinc/nginx-unprivileged:latest
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+        name: web
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+        volumeMounts:
+        - mountPath: /usr/share/nginx/html
+          name: html
+      volumes:
+      - configMap:
+          name: web
+        name: html
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    affinity: directory
+    app: ds-cts
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+    tier: ds
+  name: ds-cts
+  namespace: forgeops-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      affinity: directory
+      app: ds-cts
+      app.kubernetes.io/name: forgerock-01
+  serviceName: ds-cts
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+      labels:
+        affinity: directory
+        app: ds-cts
+        app.kubernetes.io/managed-by: skaffold-v1.9.1
+        app.kubernetes.io/name: forgerock-01
+        skaffold.dev/builder: local
+        skaffold.dev/cleanup: "true"
+        skaffold.dev/deployer: kustomize
+        skaffold.dev/docker-api-version: "1.35"
+        skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+        skaffold.dev/tag-policy: sha256
+        skaffold.dev/tail: "true"
+        tier: ds
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - preference:
+              matchExpressions:
+              - key: ds
+                operator: Exists
+            weight: 100
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: affinity
+                  operator: In
+                  values:
+                  - directory
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      containers:
+      - args:
+        - start-ds
+        env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        image: docker.james.lab.zivra.com:9500/ds-cts:latest@sha256:86a3904eb2249e03e297d8f37b5e9d2420055df0f083c88642fff4fca41a6543
+        name: ds
+        ports:
+        - containerPort: 1389
+          name: ldap
+        - containerPort: 1636
+          name: ldaps
+        - containerPort: 4444
+          name: admin
+        - containerPort: 8989
+          name: replication
+        - containerPort: 8080
+          name: http
+        - containerPort: 8443
+          name: https
+        resources:
+          limits:
+            memory: 1024Mi
+          requests:
+            cpu: 250m
+            memory: 512Mi
+        volumeMounts:
+        - mountPath: /opt/opendj/data
+          name: data
+        - mountPath: /opt/opendj/secrets
+          name: secrets
+        - mountPath: /var/run/secrets/opendj
+          name: secrets
+      initContainers:
+      - command:
+        - /opt/opendj/bin/ds-init.sh
+        image: docker.james.lab.zivra.com:9500/ds-cts:latest@sha256:86a3904eb2249e03e297d8f37b5e9d2420055df0f083c88642fff4fca41a6543
+        imagePullPolicy: IfNotPresent
+        name: initialize
+        resources:
+          limits:
+            memory: 512Mi
+          requests:
+            cpu: 250m
+            memory: 512Mi
+        volumeMounts:
+        - mountPath: /opt/opendj/data
+          name: data
+        - mountPath: /var/run/secrets/opendj-passwords
+          name: passwords
+      securityContext:
+        fsGroup: 0
+        runAsUser: 11111
+      terminationGracePeriodSeconds: 30
+      tolerations:
+      - key: WorkerDedicatedDS
+        operator: Exists
+      volumes:
+      - name: secrets
+        secret:
+          secretName: ds
+      - name: passwords
+        secret:
+          secretName: ds-passwords
+  updateStrategy:
+    type: RollingUpdate
+  volumeClaimTemplates:
+  - metadata:
+      annotations:
+        pv.beta.kubernetes.io/gid: "0"
+      labels:
+        affinity: directory
+        app: ds-cts
+        app.kubernetes.io/managed-by: skaffold-v1.9.1
+        app.kubernetes.io/name: forgerock-01
+        skaffold.dev/builder: local
+        skaffold.dev/cleanup: "true"
+        skaffold.dev/deployer: kustomize
+        skaffold.dev/docker-api-version: "1.35"
+        skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+        skaffold.dev/tag-policy: sha256
+        skaffold.dev/tail: "true"
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    affinity: directory
+    app: ds-idrepo
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+    tier: ds
+  name: ds-idrepo
+  namespace: forgeops-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      affinity: directory
+      app: ds-idrepo
+      app.kubernetes.io/name: forgerock-01
+  serviceName: ds-idrepo
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+      labels:
+        affinity: directory
+        app: ds-idrepo
+        app.kubernetes.io/managed-by: skaffold-v1.9.1
+        app.kubernetes.io/name: forgerock-01
+        skaffold.dev/builder: local
+        skaffold.dev/cleanup: "true"
+        skaffold.dev/deployer: kustomize
+        skaffold.dev/docker-api-version: "1.35"
+        skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+        skaffold.dev/tag-policy: sha256
+        skaffold.dev/tail: "true"
+        tier: ds
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - preference:
+              matchExpressions:
+              - key: ds
+                operator: Exists
+            weight: 100
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: affinity
+                  operator: In
+                  values:
+                  - directory
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      containers:
+      - args:
+        - start-ds
+        env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        image: docker.james.lab.zivra.com:9500/ds-idrepo:latest@sha256:db8719c5f5c6f27b2707f866f262ac6608514c242044bd4be4a2506abb60e1e2
+        name: ds
+        ports:
+        - containerPort: 1389
+          name: ldap
+        - containerPort: 1636
+          name: ldaps
+        - containerPort: 4444
+          name: admin
+        - containerPort: 8989
+          name: replication
+        - containerPort: 8080
+          name: http
+        - containerPort: 8443
+          name: https
+        resources:
+          limits:
+            memory: 1024Mi
+          requests:
+            cpu: 250m
+            memory: 512Mi
+        volumeMounts:
+        - mountPath: /opt/opendj/data
+          name: data
+        - mountPath: /opt/opendj/secrets
+          name: secrets
+        - mountPath: /var/run/secrets/opendj
+          name: secrets
+      initContainers:
+      - command:
+        - /opt/opendj/bin/ds-init.sh
+        image: docker.james.lab.zivra.com:9500/ds-idrepo:latest@sha256:db8719c5f5c6f27b2707f866f262ac6608514c242044bd4be4a2506abb60e1e2
+        imagePullPolicy: IfNotPresent
+        name: initialize
+        resources:
+          limits:
+            memory: 512Mi
+          requests:
+            cpu: 250m
+            memory: 512Mi
+        volumeMounts:
+        - mountPath: /opt/opendj/data
+          name: data
+        - mountPath: /var/run/secrets/opendj-passwords
+          name: passwords
+      securityContext:
+        fsGroup: 0
+        runAsUser: 11111
+      terminationGracePeriodSeconds: 30
+      tolerations:
+      - key: WorkerDedicatedDS
+        operator: Exists
+      volumes:
+      - name: secrets
+        secret:
+          secretName: ds
+      - name: passwords
+        secret:
+          secretName: ds-passwords
+  updateStrategy:
+    type: RollingUpdate
+  volumeClaimTemplates:
+  - metadata:
+      annotations:
+        pv.beta.kubernetes.io/gid: "0"
+      labels:
+        affinity: directory
+        app: ds-idrepo
+        app.kubernetes.io/managed-by: skaffold-v1.9.1
+        app.kubernetes.io/name: forgerock-01
+        skaffold.dev/builder: local
+        skaffold.dev/cleanup: "true"
+        skaffold.dev/deployer: kustomize
+        skaffold.dev/docker-api-version: "1.35"
+        skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+        skaffold.dev/tag-policy: sha256
+        skaffold.dev/tail: "true"
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: idm
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    component: idm
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+    tier: middle
+    vendor: forgerock
+  name: idm
+  namespace: forgeops-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: idm
+      app.kubernetes.io/name: forgerock-01
+      component: idm
+      tier: middle
+      vendor: forgerock
+  serviceName: idm
+  template:
+    metadata:
+      annotations:
+        prometheus.io/port: "8080"
+        prometheus.io/scrape: "true"
+      labels:
+        app: idm
+        app.kubernetes.io/managed-by: skaffold-v1.9.1
+        app.kubernetes.io/name: forgerock-01
+        component: idm
+        skaffold.dev/builder: local
+        skaffold.dev/cleanup: "true"
+        skaffold.dev/deployer: kustomize
+        skaffold.dev/docker-api-version: "1.35"
+        skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+        skaffold.dev/tag-policy: sha256
+        skaffold.dev/tail: "true"
+        tier: middle
+        vendor: forgerock
+    spec:
+      containers:
+      - env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        envFrom:
+        - configMapRef:
+            name: idm
+        - secretRef:
+            name: idm-env-secrets
+        image: docker.james.lab.zivra.com:9500/idm:latest@sha256:7db8cb38c57a0e7c46d331c14ba7005cb416aac2b74b2ab9e1925f4ccfccc0e6
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            httpHeaders:
+            - name: X-OpenIDM-Username
+              value: anonymous
+            - name: X-OpenIDM-Password
+              value: anonymous
+            - name: X-OpenIDM-NoSession
+              value: "true"
+            path: /openidm/info/ping
+            port: 8080
+          initialDelaySeconds: 120
+          periodSeconds: 60
+          timeoutSeconds: 5
+        name: openidm
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            httpHeaders:
+            - name: X-OpenIDM-Username
+              value: anonymous
+            - name: X-OpenIDM-Password
+              value: anonymous
+            - name: X-OpenIDM-NoSession
+              value: "true"
+            path: /openidm/info/ping
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+        resources:
+          limits:
+            memory: 1280Mi
+          requests:
+            cpu: 250m
+            memory: 768Mi
+        volumeMounts:
+        - mountPath: /var/run/secrets/idm
+          name: idm-secrets
+        - mountPath: /opt/openidm/logs
+          name: logs
+        - mountPath: /opt/openidm/audit
+          name: audit-logs
+        - mountPath: /var/run/openidm/logging
+          name: idm-logging-properties
+      volumes:
+      - name: idm-secrets
+        secret:
+          secretName: idm
+      - emptyDir: {}
+        name: logs
+      - emptyDir: {}
+        name: audit-logs
+      - configMap:
+          name: idm-logging-properties
+        name: idm-logging-properties
+  updateStrategy:
+    type: RollingUpdate
+  volumeClaimTemplates: []
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app: forgeops-secrets
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+  name: forgeops-secrets
+  namespace: forgeops-test
+spec:
+  template:
+    metadata:
+      labels:
+        app: forgeops-secrets
+        app.kubernetes.io/managed-by: skaffold-v1.9.1
+        app.kubernetes.io/name: forgerock-01
+        skaffold.dev/builder: local
+        skaffold.dev/cleanup: "true"
+        skaffold.dev/deployer: kustomize
+        skaffold.dev/docker-api-version: "1.35"
+        skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+        skaffold.dev/tag-policy: sha256
+        skaffold.dev/tail: "true"
+    spec:
+      containers:
+      - image: docker.james.lab.zivra.com:9500/forgeops-secrets:latest@sha256:cc97a45fa51274dc81f34cb10ef8d239e8e369d4aee426aa555d4203bd09ed25
+        name: forgeops-secrets
+      restartPolicy: Never
+      serviceAccountName: forgeops-secrets-serviceaccount
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: default-issuer
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite ^(/enduser)$ $1/ redirect;
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+  labels:
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+  name: end-user-ui
+  namespace: forgeops-test
+spec:
+  rules:
+  - host: forgeops-test.iam.example.com
+    http:
+      paths:
+      - backend:
+          serviceName: end-user-ui
+          servicePort: 8080
+        path: /enduser/?(.*)
+  tls:
+  - hosts:
+    - forgeops-test.iam.example.com
+    secretName: sslcert
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: default-issuer
+    haproxy.router.openshift.io/cookie_name: route
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/affinity: cookie
+    nginx.ingress.kubernetes.io/body-size: 64m
+    nginx.ingress.kubernetes.io/enable-cors: "false"
+    nginx.ingress.kubernetes.io/proxy-body-size: 64m
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    nginx.ingress.kubernetes.io/send-timeout: "600"
+    nginx.ingress.kubernetes.io/session-cookie-hash: sha1
+    nginx.ingress.kubernetes.io/session-cookie-name: route
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  labels:
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+  name: forgerock
+  namespace: forgeops-test
+spec:
+  rules:
+  - host: forgeops-test.iam.example.com
+    http:
+      paths:
+      - backend:
+          serviceName: am
+          servicePort: 80
+        path: /am
+      - backend:
+          serviceName: idm
+          servicePort: 80
+        path: /openidm
+      - backend:
+          serviceName: idm
+          servicePort: 80
+        path: /upload
+      - backend:
+          serviceName: idm
+          servicePort: 80
+        path: /export
+      - backend:
+          serviceName: idm
+          servicePort: 80
+        path: /admin
+      - backend:
+          serviceName: forgeops-tests
+          servicePort: 80
+        path: /tests
+  tls:
+  - hosts:
+    - forgeops-test.iam.example.com
+    secretName: sslcert
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: default-issuer
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite ^(/login)$ $1/ redirect;
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+  labels:
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+  name: login-ui
+  namespace: forgeops-test
+spec:
+  rules:
+  - host: forgeops-test.iam.example.com
+    http:
+      paths:
+      - backend:
+          serviceName: login-ui
+          servicePort: 8080
+        path: /login/?(.*)
+  tls:
+  - hosts:
+    - forgeops-test.iam.example.com
+    secretName: sslcert
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: default-issuer
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite ^(/platform)$ $1/ redirect;
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+  labels:
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+  name: platform-ui
+  namespace: forgeops-test
+spec:
+  rules:
+  - host: forgeops-test.iam.example.com
+    http:
+      paths:
+      - backend:
+          serviceName: admin-ui
+          servicePort: 8080
+        path: /platform/?(.*)
+  tls:
+  - hosts:
+    - forgeops-test.iam.example.com
+    secretName: sslcert
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: default-issuer
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  labels:
+    app.kubernetes.io/managed-by: skaffold-v1.9.1
+    app.kubernetes.io/name: forgerock-01
+    skaffold.dev/builder: local
+    skaffold.dev/cleanup: "true"
+    skaffold.dev/deployer: kustomize
+    skaffold.dev/docker-api-version: "1.35"
+    skaffold.dev/run-id: 7a4e63a0-75a6-4e79-a5ad-97b8d60df1eb
+    skaffold.dev/tag-policy: sha256
+    skaffold.dev/tail: "true"
+  name: web
+  namespace: forgeops-test
+spec:
+  rules:
+  - host: forgeops-test.iam.example.com
+    http:
+      paths:
+      - backend:
+          serviceName: web
+          servicePort: 8080
+        path: /web
+      - backend:
+          serviceName: ig
+          servicePort: 8080
+        path: /ig(/|$)(.*)
+  tls:
+  - hosts:
+    - forgeops-test.iam.example.com
+    secretName: sslcert
