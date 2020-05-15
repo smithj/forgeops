@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-demo-istio-data-ds-idrepo-0
+spec:
+  capacity:
+    storage: 25Gi 
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain 
+
+  nfs: 
+    path: /mnt/nfs/nelson/openshift/pv-demo-istio-data-ds-idrepo-0
+    server: 10.2.1.30 
+    readOnly: false
+
