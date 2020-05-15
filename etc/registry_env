@@ -1,0 +1,4 @@
+#registry_env and set 
+REGISTRY_PASSWORD=Zivra1234!
+REGISTRY_ID=docker.james.lab.zivra.com:9500
+REGISTRY_EMAIL=jsmith@zivra.com
