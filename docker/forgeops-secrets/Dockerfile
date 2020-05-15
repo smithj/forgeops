@@ -19,7 +19,8 @@ ADD forgeops-secrets-image/ /opt/gen/
 RUN mkdir -p /opt/gen/secrets/generic/truststore && \
     cp $JAVA_HOME/lib/security/cacerts /opt/gen/secrets/generic/truststore && \
     chmod 764 /opt/gen/secrets/generic/truststore/cacerts && \
-    chown -R forgerock:root /opt/gen
+    chown -R forgerock:root /opt/gen && \
+    chmod -R g=u /opt/gen
 
 # This speeds up secret generation on minikube by approx. 4x
 ENV OPENDJ_JAVA_ARGS -Djava.security.egd=file:/dev/urandom
