@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -xeuo pipefail
 
 echo "ForgeOPS secrets generation job"
 echo "#### GETTING EXISTING SECRETS ####"
