@@ -10,3 +10,4 @@ RUN rm bundle/org.apache.felix.webconsole*.jar  && \
 RUN rm -fr /opt/openidm/conf
 ENV JAVA_OPTS "-server -XX:MaxRAMPercentage=75"
 COPY --chown=forgerock:root . /opt/openidm
+RUN chmod -R g=u /opt/openidm
